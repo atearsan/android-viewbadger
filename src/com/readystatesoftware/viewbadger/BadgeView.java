@@ -141,7 +141,6 @@ public class BadgeView extends TextView {
 		
 		LayoutParams lp = target.getLayoutParams();
 		ViewParent parent = target.getParent();
-		FrameLayout container = new FrameLayout(context);
 		
 		if (target instanceof TabWidget) {
 			
@@ -149,15 +148,19 @@ public class BadgeView extends TextView {
 			target = ((TabWidget) target).getChildTabViewAt(targetTabIndex);
 			this.target = target;
 			
+			FrameLayout container = new FrameLayout(context);
 			((ViewGroup) target).addView(container, 
 					new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 			
 			this.setVisibility(View.GONE);
 			container.addView(this);
 			
-		} else {
+		} else if (target.getParent() instanceof FrameLayout) {
+            		((FrameLayout) target.getParent()).addView(this); // add by @atearsan / 2015-07-11
+        	}  else {
 			
 			// TODO verify that parent is indeed a ViewGroup
+			FrameLayout container = new FrameLayout(context);
 			ViewGroup group = (ViewGroup) parent; 
 			int index = group.indexOfChild(target);
 			
